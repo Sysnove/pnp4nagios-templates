@@ -4,6 +4,9 @@
 # Template for check_disk
 #
 # RRDtool Options
+#
+
+$i = 0;
 
 foreach ($this->DS as $KEY=>$VAL) {
 # set initial values
@@ -33,32 +36,43 @@ foreach ($this->DS as $KEY=>$VAL) {
 		$divis = $max[3];
 		$return = '';
 	}
-	$ds_name[$KEY] = str_replace("_","/",$VAL['NAME']);
+	$name = str_replace("_","/",$VAL['NAME']);
+
+    if ($name == "/dev"
+        || $name == "/run"
+        || $name == "/run/shm"
+        || $name == "/run/lock") {
+        continue;
+    }
+
+    $i++;
+
+    $ds_name[$i] == $name;
 	# set graph labels
-	$opt[$KEY]     = "--vertical-label $label -l 0 $upper --title \"Filesystem $ds_name[$KEY]\" ";
+	$opt[$i]     = "--vertical-label $label -l 0 $upper --title \"Filesystem $ds_name[$i]\" ";
 	# Graph Definitions
-	$def[$KEY]     = rrd::def( "var1", $VAL['RRDFILE'], $VAL['DS'], "AVERAGE" ); 
+	$def[$i]     = rrd::def( "var1", $VAL['RRDFILE'], $VAL['DS'], "AVERAGE" ); 
 	# "normalize" graph values
-	$def[$KEY]    .= rrd::cdef( "v_n","var1,$divis,/");
-	$def[$KEY]    .= rrd::area( "v_n", "#c6c6c6",  $ds_name[$KEY] );
-	$def[$KEY]    .= rrd::line1( "v_n", "#003300" );
+	$def[$i]    .= rrd::cdef( "v_n","var1,$divis,/");
+	$def[$i]    .= rrd::area( "v_n", "#c6c6c6",  $ds_name[$i] );
+	$def[$i]    .= rrd::line1( "v_n", "#003300" );
 	# show values in legend
-	$def[$KEY]    .= rrd::gprint( "v_n", "LAST", "$fmt $label$pct $maximum ");
-	$def[$KEY]    .= rrd::gprint( "v_n", "AVERAGE", "$fmt $label$pct avg used $return");
+	$def[$i]    .= rrd::gprint( "v_n", "LAST", "$fmt $label$pct $maximum ");
+	$def[$i]    .= rrd::gprint( "v_n", "AVERAGE", "$fmt $label$pct avg used $return");
 	# create max line and legend
 	if ($VAL['MAX'] != "") {
-		$def[$KEY] .= rrd::gprint( "v_n", "MAX", "$fmt $label$pct max used \\n" );
-		$def[$KEY] .= rrd::hrule( $max[1], "#003300", "Size of FS  $max[0] \\n");
+		$def[$i] .= rrd::gprint( "v_n", "MAX", "$fmt $label$pct max used \\n" );
+		$def[$i] .= rrd::hrule( $max[1], "#003300", "Size of FS  $max[0] \\n");
 	}
 	# create warning line and legend
 	if ($VAL['WARN'] != "") {
 		$warn = pnp::adjust_unit( $VAL['WARN'].$unit,1024,$fmt );
-		$def[$KEY] .= rrd::hrule( $warn[1], "#ffff00", "Warning  on $warn[0] \\n" );
+		$def[$i] .= rrd::hrule( $warn[1], "#ffff00", "Warning  on $warn[0] \\n" );
 	}
 	# create critical line and legend
 	if ($VAL['CRIT'] != "") {
 		$crit = pnp::adjust_unit( $VAL['CRIT'].$unit,1024,$fmt );
-		$def[$KEY] .= rrd::hrule( $crit[1], "#ff0000", "Critical on $crit[0]\\n" );
+		$def[$i] .= rrd::hrule( $crit[1], "#ff0000", "Critical on $crit[0]\\n" );
 	}
 }
 ?>
