@@ -47,7 +47,7 @@ foreach ($this->DS as $KEY=>$VAL) {
 
     $i++;
 
-    $ds_name[$i] == $name;
+    $ds_name[$i] = $name;
 	# set graph labels
 	$opt[$i]     = "--vertical-label $label -l 0 $upper --title \"Filesystem $ds_name[$i]\" ";
 	# Graph Definitions
