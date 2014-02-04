@@ -23,7 +23,7 @@ if ($CRIT[1] != "") {
     $def[1] .= rrd::hrule( $CRIT[1], "#ff0000", "Critical on $CRIT[1] $UNIT[1]\\n" );
     $def[1] .= rrd::hrule( $CRIT[1]*-1, "#ffff00");
 }
-$def[$j] .= rrd::hrule(0, "#606060");
+$def[1] .= rrd::hrule(0, "#606060");
 
 ?>
 
