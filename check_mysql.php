@@ -392,25 +392,23 @@ foreach ($DS as $i) {
         }
     }
 
-    if sizeof($def) > [$defcnt] {
-        if ($warning != "") {
-            $def[$defcnt] .= rrd::hrule( $warning, "#$warn", "Warning $warning $UNIT[$i]\\n" );
-        }
-        if ($warnmin != "") {
-            $def[$defcnt] .= rrd::hrule( $warnmin, "#$warn", "Warning (min) $warnmin $UNIT[$i]\\n" );
-        }
-        if ($warnmax != "") {
-            $def[$defcnt] .= rrd::hrule( $warnmax, "#$warn", "Warning (max) $warnmax $UNIT[$i]\\n" );
-        }
-        if ($critical != "") {
-            $def[$defcnt] .= rrd::hrule( $critical, "#$crit", "Critical $critical $UNIT[$i]\\n" );
-        }
-        if ($critmin != "") {
-            $def[$defcnt] .= rrd::hrule( $critmin, "#$crit", "Critical (min) $critmin $UNIT[$i]\\n" );
-        }
-        if ($critmax != "") {
-            $def[$defcnt] .= rrd::hrule( $critmax, "#$crit", "Critical (max) $critmax $UNIT[$i]\\n" );
-        }
+    if ($warning != "") {
+        $def[$defcnt] .= rrd::hrule( $warning, "#$warn", "Warning $warning $UNIT[$i]\\n" );
+    }
+    if ($warnmin != "") {
+        $def[$defcnt] .= rrd::hrule( $warnmin, "#$warn", "Warning (min) $warnmin $UNIT[$i]\\n" );
+    }
+    if ($warnmax != "") {
+        $def[$defcnt] .= rrd::hrule( $warnmax, "#$warn", "Warning (max) $warnmax $UNIT[$i]\\n" );
+    }
+    if ($critical != "") {
+        $def[$defcnt] .= rrd::hrule( $critical, "#$crit", "Critical $critical $UNIT[$i]\\n" );
+    }
+    if ($critmin != "") {
+        $def[$defcnt] .= rrd::hrule( $critmin, "#$crit", "Critical (min) $critmin $UNIT[$i]\\n" );
+    }
+    if ($critmax != "") {
+        $def[$defcnt] .= rrd::hrule( $critmax, "#$crit", "Critical (max) $critmax $UNIT[$i]\\n" );
     }
     $defcnt++;
 }
