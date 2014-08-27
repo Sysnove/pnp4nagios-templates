@@ -45,13 +45,6 @@ foreach ($DS as $i) {
         $def[$defcnt] .= "LINE1:connectiontime#".$colors['response'].":\" \" ";
         $def[$defcnt] .= "VDEF:vconnetiontime=connectiontime,LAST " ;
         $def[$defcnt] .= "GPRINT:vconnetiontime:\"$NAME[$i] %3.2lf\\n\" ";
-        if ($warning != "") {
-            $def[$defcnt] .= rrd::hrule( $warning, "#ffff00", "Warning on $warning $UNIT[$i]\\n" );
-        }
-        if ($critical != "") {
-            $def[$defcnt] .= rrd::hrule( $critical, "#ff0000", "Critical on $critical $UNIT[$i]\\n" );
-        }
-        $defcnt++;
     }
     if(preg_match('/^uptime$/', $NAME[$i])) {
         $ds_name[$defcnt] = "$NAME[$i]";
@@ -67,7 +60,6 @@ foreach ($DS as $i) {
         $def[$defcnt] .= "GPRINT:vuptime:\"%.0lf Seconds \" " ;
         $def[$defcnt] .= "GPRINT:vuptimed:\"%.0lf Days \" " ;
         $def[$defcnt] .= "GPRINT:vuptimew:\"%.0lf Weeks \" " ;
-        $defcnt++;
     }
     if(preg_match('/^bufferpool_hitrate_now$/', $NAME[$i])) {
         $ds_name[$defcnt] = "Innodb buffer pool hitrate";
@@ -93,7 +85,6 @@ foreach ($DS as $i) {
             $def[$defcnt] .= "GPRINT:vhitratenow:\"Hitratio (current) is %3.2lf percent \\n\" ";
           }
         }
-        $defcnt++;
     }
     if(preg_match('/^bufferpool_free_waits_rate$/', $NAME[$i])) {
         $ds_name[$defcnt] = "Innodb buffer pool waits rate";
@@ -103,7 +94,6 @@ foreach ($DS as $i) {
         $def[$defcnt] .= "AREA:logwait#111111 ";
         $def[$defcnt] .= "VDEF:vlogwait=logwait,LAST " ;
         $def[$defcnt] .= "GPRINT:vlogwait:\"Rate is %3.2lf Waits / Second \" " ;
-        $defcnt++;
     }
     if(preg_match('/^innodb_log_waits_rate$/', $NAME[$i])) {
         $ds_name[$defcnt] = "Innodb log buffer waits rate";
@@ -113,7 +103,6 @@ foreach ($DS as $i) {
         $def[$defcnt] .= "AREA:logwait#111111 ";
         $def[$defcnt] .= "VDEF:vlogwait=logwait,LAST " ;
         $def[$defcnt] .= "GPRINT:vlogwait:\"Rate is %3.2lf Waits / Second \" " ;
-        $defcnt++;
     }
     if(preg_match('/^long_running_procs$/', $NAME[$i])) {
         $ds_name[$defcnt] = "$NAME[$i]";
@@ -123,8 +112,7 @@ foreach ($DS as $i) {
         $def[$defcnt] .= "LINE:longrun#".$colors['number'].":\" \" ";
         $def[$defcnt] .= "VDEF:vlongrun=longrun,LAST " ;
         $def[$defcnt] .= "GPRINT:vlongrun:\"$NAME[$i] %3.2lf\\n\" " ;
-        $defcnt++;
-        }
+    }
     if(preg_match('/^keycache_hitrate_now$/', $NAME[$i])) {
         $ds_name[$defcnt] = "MyISAM key cache hitrate";
         $opt[$defcnt] = "--vertical-label \"$UNIT[$i]\" --title \"MyISAM key cache hitrate on $hostname\" --upper-limit 100 --lower-limit 0 ";
@@ -149,7 +137,6 @@ foreach ($DS as $i) {
             $def[$defcnt] .= "GPRINT:vhitratenow:\"Hitratio (current) is %3.2lf percent \\n\" ";
           }
         }
-        $defcnt++;
     }
     if(preg_match('/^qcache_lowmem_prunes_rate$/', $NAME[$i])) {
         $ds_name[$defcnt] = "$NAME[$i]";
@@ -159,8 +146,7 @@ foreach ($DS as $i) {
         $def[$defcnt] .= "LINE:prunes#".$colors['rate'].":\" \" ";
         $def[$defcnt] .= "VDEF:vprunes=prunes,LAST " ;
         $def[$defcnt] .= "GPRINT:vprunes:\"$NAME[$i] %3.2lf\\n\" " ;
-        $defcnt++;
-        }
+    }
     if(preg_match('/^slow_queries_rate$/', $NAME[$i])) {
         $ds_name[$defcnt] = "$NAME[$i]";
         $opt[$defcnt] = "--vertical-label \"$UNIT[$i]\" --title \"$hostname / $servicedesc\" --upper-limit 100 --lower-limit 0";
@@ -169,8 +155,7 @@ foreach ($DS as $i) {
         $def[$defcnt] .= "LINE:prunes#".$colors['rate'].":\" \" ";
         $def[$defcnt] .= "VDEF:vprunes=prunes,LAST " ;
         $def[$defcnt] .= "GPRINT:vprunes:\"$NAME[$i] %3.2lf\\n\" " ;
-        $defcnt++;
-        }
+    }
     if(preg_match('/^tablecache_fillrate$/', $NAME[$i])) {
         $ds_name[$defcnt] = "Table cache hitrate";
         $opt[$defcnt] = "--vertical-label \"$UNIT[$i]\" --title \"Table cache hitrate on $hostname\" --upper-limit 100 --lower-limit 0 ";
@@ -195,7 +180,6 @@ foreach ($DS as $i) {
             $def[$defcnt] .= "GPRINT:vhitratenow:\"%3.2lf%% of the cache is filled \\n\" ";
           }
         }
-        $defcnt++;
     }
     if(preg_match('/^pct_tmp_table_on_disk_now$/', $NAME[$i])) {
         $ds_name[$defcnt] = "Temporary tables created on disk ";
@@ -222,7 +206,6 @@ foreach ($DS as $i) {
             $def[$defcnt] .= "GPRINT:vtmptbldsknow:\"%3.2lf percent of temp tables were created on disk (recently)\\n\" " ;
           }   
         }
-        $defcnt++;
     }
     if(preg_match('/^threads_connected$/', $NAME[$i])) {
         $ds_name[$defcnt] = "$NAME[$i]";
@@ -232,8 +215,7 @@ foreach ($DS as $i) {
         $def[$defcnt] .= "LINE:threads#".$colors['number'].":\" \" ";
         $def[$defcnt] .= "VDEF:vthreads=threads,LAST " ;
         $def[$defcnt] .= "GPRINT:vthreads:\"$NAME[$i] %3.2lf\\n\" " ;
-        $defcnt++;
-        }
+    }
     if(preg_match('/^threads_running$/', $NAME[$i])) {
         $ds_name[$defcnt] = "$NAME[$i]";
         $opt[$defcnt] = "--vertical-label \"$UNIT[$i]\" --title \"$hostname / $servicedesc\" ";
@@ -242,8 +224,7 @@ foreach ($DS as $i) {
         $def[$defcnt] .= "LINE:threads#".$colors['number'].":\" \" ";
         $def[$defcnt] .= "VDEF:vthreads=threads,LAST " ;
         $def[$defcnt] .= "GPRINT:vthreads:\"$NAME[$i] %3.2lf\\n\" " ;
-        $defcnt++;
-        }
+    }
     if(preg_match('/^threads_cached$/', $NAME[$i])) {
         $ds_name[$defcnt] = "$NAME[$i]";
         $opt[$defcnt] = "--vertical-label \"$UNIT[$i]\" --title \"$hostname / $servicedesc\" ";
@@ -252,8 +233,7 @@ foreach ($DS as $i) {
         $def[$defcnt] .= "LINE:threads#".$colors['number'].":\" \" ";
         $def[$defcnt] .= "VDEF:vthreads=threads,LAST " ;
         $def[$defcnt] .= "GPRINT:vthreads:\"$NAME[$i] %3.2lf\\n\" " ;
-        $defcnt++;
-        }
+    }
     if(preg_match('/^threads_created_per_sec$/', $NAME[$i])) {
         $ds_name[$defcnt] = "$NAME[$i]";
         $opt[$defcnt] = "--vertical-label \"$UNIT[$i]\" --title \"$hostname / $servicedesc\" ";
@@ -262,8 +242,7 @@ foreach ($DS as $i) {
         $def[$defcnt] .= "LINE:sps#".$colors['response'].":\" \" ";
         $def[$defcnt] .= "VDEF:vsps=sps,LAST " ;
         $def[$defcnt] .= "GPRINT:vsps:\"$NAME[$i] %3.2lf\\n\" " ;
-        $defcnt++;
-        }
+    }
     if(preg_match('/^connects_aborted_per_sec$/', $NAME[$i])) {
         $ds_name[$defcnt] = "$NAME[$i]";
         $opt[$defcnt] = "--vertical-label \"$UNIT[$i]\" --title \"$hostname / $servicedesc\" ";
@@ -272,8 +251,7 @@ foreach ($DS as $i) {
         $def[$defcnt] .= "LINE:sps#".$colors['response'].":\" \" ";
         $def[$defcnt] .= "VDEF:vsps=sps,LAST " ;
         $def[$defcnt] .= "GPRINT:vsps:\"$NAME[$i] %3.2lf\\n\" " ;
-        $defcnt++;
-        }
+    }
     if(preg_match('/^clients_aborted_per_sec$/', $NAME[$i])) {
         $ds_name[$defcnt] = "$NAME[$i]";
         $opt[$defcnt] = "--vertical-label \"$UNIT[$i]\" --title \"$hostname / $servicedesc\" ";
@@ -282,8 +260,7 @@ foreach ($DS as $i) {
         $def[$defcnt] .= "LINE:sps#".$colors['response'].":\" \" ";
         $def[$defcnt] .= "VDEF:vsps=sps,LAST " ;
         $def[$defcnt] .= "GPRINT:vsps:\"$NAME[$i] %3.2lf\\n\" " ;
-        $defcnt++;
-        }
+    }
     if(preg_match('/^Slots$/', $NAME[$i])) {
         $ds_name[$defcnt] = "Slots";
         $opt[$defcnt] = "--vertical-label \"$UNIT[$i]\" --title \"Slots and OpenSlots\" ";
@@ -300,7 +277,6 @@ foreach ($DS as $i) {
             $def[$defcnt] .= "GPRINT:vopen:\"$NAME[$j] %.0lf\" " ;
           }
         }
-        $defcnt++;
     }
     if(preg_match('/^index_usage$/', $NAME[$i])) {
         $ds_name[$defcnt] = "$NAME[$i]";
@@ -318,7 +294,6 @@ foreach ($DS as $i) {
             $def[$defcnt] .= "GPRINT:vindexusagenow:\"$NAME[$j] %.0lf\\n\" " ;
           }
         }
-        $defcnt++;
     }
     if(preg_match('/^qcache_hitrate$/', $NAME[$i])) {
         $ds_name[$defcnt] = "$NAME[$i]";
@@ -348,7 +323,6 @@ foreach ($DS as $i) {
             $def[$defcnt] .= "GPRINT:vsps:\"$NAME[$k] %3.2lf\\n\" ";
           }   
         }
-        $defcnt++;
     }
     if(preg_match('/^tablelock_contention$/', $NAME[$i])) {
         $ds_name[$defcnt] = "$NAME[$i]";
@@ -366,7 +340,6 @@ foreach ($DS as $i) {
             $def[$defcnt] .= "GPRINT:vtbllckcontnow:\"$NAME[$j] %.0lf\\n\" " ;
           }
         }
-        $defcnt++;
     }
     if(preg_match('/^thread_cache_hitrate$/', $NAME[$i])) {
         $ds_name[$defcnt] = "$NAME[$i]";
@@ -396,7 +369,6 @@ foreach ($DS as $i) {
             $def[$defcnt] .= "GPRINT:vsps:\"$NAME[$k] %3.2lf\\n\" ";
           }   
         }
-        $defcnt++;
     }
     if(preg_match('/^pct_open_files$/', $NAME[$i])) {
         $ds_name[$defcnt] = "$NAME[$i]";
@@ -418,7 +390,26 @@ foreach ($DS as $i) {
             $def[$defcnt] .= "GPRINT:vopenfiles:\"$NAME[$j] %.0lf\\n\" " ;
           }
         }
-        $defcnt++;
     }
+
+    if ($warning != "") {
+        $def[$defcnt] .= rrd::hrule( $warning, "#$warn", "Warning $warning $UNIT[$i]\\n" );
+    }
+    if ($warnmin != "") {
+        $def[$defcnt] .= rrd::hrule( $warnmin, "#$warn", "Warning (min) $warnmin $UNIT[$i]\\n" );
+    }
+    if ($warnmax != "") {
+        $def[$defcnt] .= rrd::hrule( $warnmax, "#$warn", "Warning (max) $warnmax $UNIT[$i]\\n" );
+    }
+    if ($critical != "") {
+        $def[$defcnt] .= rrd::hrule( $critical, "#$crit", "Critical $critical $UNIT[$i]\\n" );
+    }
+    if ($critmin != "") {
+        $def[$defcnt] .= rrd::hrule( $critmin, "#$crit", "Critical (min) $critmin $UNIT[$i]\\n" );
+    }
+    if ($critmax != "") {
+        $def[$defcnt] .= rrd::hrule( $critmax, "#$crit", "Critical (max) $critmax $UNIT[$i]\\n" );
+    }
+    $defcnt++;
 }
 ?>
