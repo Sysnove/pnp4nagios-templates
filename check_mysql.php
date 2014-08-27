@@ -24,6 +24,9 @@ $yellow = "FFFF00E0";
 $red = "F83838E0";
 $now = "FF00FF";
 
+$warn = "FFFF00";
+$crit = "FF0000";
+
 foreach ($DS as $i) {
     $warning = ($WARN[$i] != "") ? $WARN[$i] : "";
     $warnmin = ($WARN_MIN[$i] != "") ? $WARN_MIN[$i] : "";
@@ -42,6 +45,12 @@ foreach ($DS as $i) {
         $def[$defcnt] .= "LINE1:connectiontime#".$colors['response'].":\" \" ";
         $def[$defcnt] .= "VDEF:vconnetiontime=connectiontime,LAST " ;
         $def[$defcnt] .= "GPRINT:vconnetiontime:\"$NAME[$i] %3.2lf\\n\" ";
+        if ($warning != "") {
+            $def[$defcnt] .= rrd::hrule( $warning, "#ffff00", "Warning on $warning $UNIT[$i]\\n" );
+        }
+        if ($critical != "") {
+            $def[$defcnt] .= rrd::hrule( $critical, "#ff0000", "Critical on $critical $UNIT[$i]\\n" );
+        }
         $defcnt++;
     }
     if(preg_match('/^uptime$/', $NAME[$i])) {
