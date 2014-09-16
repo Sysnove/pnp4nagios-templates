@@ -17,7 +17,9 @@
 #   PNP Template for check_postfix_mailqueue
 #   Author: Bjoern Bongermino (http://www.bongermino.de/)
 
-$opt[1] = "--vertical-label \"Mails \" -l 0 -r --title \"Postfix Mailqueue Stats for $hostname\" ";
+include("style.php");
+
+$opt[1] = "--vertical-label \"Mails \" -l 0 -r --title \"Postfix Mailqueue Stats for $hostname\" $colors $options ";
 
 $def[1]  = "DEF:deferred=$RRDFILE[1]:$DS[1]:AVERAGE " ;
 $def[1] .= "DEF:active=$RRDFILE[2]:$DS[2]:AVERAGE " ;
