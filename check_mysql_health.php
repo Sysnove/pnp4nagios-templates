@@ -9,12 +9,14 @@
 # Revised Naoya Hashimoto(mrhashnao@gmail.com) (https://github.com/hashnao/pnp4nagios/tree/master/templates)
 #
 
+include("style.php");
+
 $def[1] = "";
 $opt[1] = "";
 
 $defcnt = 1;
 
-$colors['response'] = "00FF00";
+$colors['response'] = $main_color;
 $colors['number'] = "c6c6c6";
 $colors['rate'] = "e5ca44";
 $colors['ratenow'] = "00FF00";
@@ -36,17 +38,17 @@ foreach ($DS as $i) {
 
     if(preg_match('/^connection_time$/', $NAME[$i])) {
         $ds_name[$defcnt] = "$NAME[$i]";
-        $opt[$defcnt] = "--vertical-label \"$UNIT[$i]\" --title \"$hostname / $servicedesc\" ";
+        $opt[$defcnt] = "--vertical-label \"$UNIT[$i]\" --title \"$hostname / $servicedesc\" $options $colors ";
         $def[$defcnt] = "";
         $def[$defcnt] .= "DEF:connectiontime=$RRDFILE[$i]:$DS[$i]:AVERAGE:reduce=LAST " ;
-        $def[$defcnt] .= "LINE1:connectiontime#".$colors['response'].":\" \" ";
+        $def[$defcnt] .= "LINE2:connectiontime#".$colors['response'].":\" \" ";
         $def[$defcnt] .= "VDEF:vconnetiontime=connectiontime,LAST " ;
         $def[$defcnt] .= "GPRINT:vconnetiontime:\"$NAME[$i] %3.2lf\\n\" ";
         $defcnt++;
     }
     if(preg_match('/^uptime$/', $NAME[$i])) {
         $ds_name[$defcnt] = "$NAME[$i]";
-        $opt[$defcnt] = "--vertical-label \"$UNIT[$i]\" --title \"$hostname / $servicedesc\" ";
+        $opt[$defcnt] = "--vertical-label \"$UNIT[$i]\" --title \"$hostname / $servicedesc\" $options $colors ";
         $def[$defcnt] = "";
         $def[$defcnt] .= "DEF:uptime=$RRDFILE[$i]:$DS[$i]:AVERAGE:reduce=LAST " ;
         $def[$defcnt] .= "AREA:uptime#111111 ";
@@ -62,7 +64,7 @@ foreach ($DS as $i) {
     }
     if(preg_match('/^bufferpool_hitrate_now$/', $NAME[$i])) {
         $ds_name[$defcnt] = "Innodb buffer pool hitrate";
-        $opt[$defcnt] = "--vertical-label \"UNIT[$i]\" --title \"Innodb buffer pool hitrate on $hostname\" --upper-limit 100 --lower-limit 0 ";
+        $opt[$defcnt] = "--vertical-label \"UNIT[$i]\" --title \"Innodb buffer pool hitrate on $hostname\" --upper-limit 100 --lower-limit 0 $options $colors ";
         $def[$defcnt] = "";
         foreach ($DS as $ii) {
           if(preg_match('/^bufferpool_hitrate$/', $NAME[$ii])) {
@@ -73,13 +75,13 @@ foreach ($DS as $i) {
             $def[$defcnt] .= "AREA:ag#$green: " ;
             $def[$defcnt] .= "AREA:ay#$yellow: " ;
             $def[$defcnt] .= "AREA:ar#$red: " ;
-            $def[$defcnt] .= "LINE1.5:hitrate#111111:\" \" ";
+            $def[$defcnt] .= "LINE2:hitrate#111111:\" \" ";
             $def[$defcnt] .= "VDEF:vhitrate=hitrate,LAST " ;
             $def[$defcnt] .= "GPRINT:vhitrate:\"Hitratio (since epoch) is %3.2lf percent \\n\" ";
           }
           if(preg_match('/^bufferpool_hitrate_now$/', $NAME[$ii])) {
             $def[$defcnt] .= "DEF:hitratenow=$RRDFILE[$ii]:$DS[$ii]:AVERAGE:reduce=LAST " ;
-            $def[$defcnt] .= "LINE1.5:hitratenow#$now:\" \" ";
+            $def[$defcnt] .= "LINE2:hitratenow#$now:\" \" ";
             $def[$defcnt] .= "VDEF:vhitratenow=hitratenow,LAST " ;
             $def[$defcnt] .= "GPRINT:vhitratenow:\"Hitratio (current) is %3.2lf percent \\n\" ";
           }
@@ -88,7 +90,7 @@ foreach ($DS as $i) {
     }
     if(preg_match('/^bufferpool_free_waits_rate$/', $NAME[$i])) {
         $ds_name[$defcnt] = "Innodb buffer pool waits rate";
-        $opt[$defcnt] = "--vertical-label \"Waits/sec\" --title \"Innodb buffer pool waits on $hostname\" ";
+        $opt[$defcnt] = "--vertical-label \"Waits/sec\" --title \"Innodb buffer pool waits on $hostname\" $options $colors ";
         $def[$defcnt] = "";
         $def[$defcnt] .= "DEF:logwait=$RRDFILE[$i]:$DS[$i]:AVERAGE:reduce=LAST " ;
         $def[$defcnt] .= "AREA:logwait#111111 ";
@@ -98,7 +100,7 @@ foreach ($DS as $i) {
     }
     if(preg_match('/^innodb_log_waits_rate$/', $NAME[$i])) {
         $ds_name[$defcnt] = "Innodb log buffer waits rate";
-        $opt[$defcnt] = "--vertical-label \"Waits/sec\" --title \"Innodb waits for log buffer $hostname\" ";
+        $opt[$defcnt] = "--vertical-label \"Waits/sec\" --title \"Innodb waits for log buffer $hostname\" $options $colors ";
         $def[$defcnt] = "";
         $def[$defcnt] .= "DEF:logwait=$RRDFILE[$i]:$DS[$i]:AVERAGE:reduce=LAST " ;
         $def[$defcnt] .= "AREA:logwait#111111 ";
@@ -108,17 +110,17 @@ foreach ($DS as $i) {
     }
     if(preg_match('/^long_running_procs$/', $NAME[$i])) {
         $ds_name[$defcnt] = "$NAME[$i]";
-        $opt[$defcnt] = "--vertical-label \"$UNIT[$i]\" --title \"$hostname / $servicedesc\" ";
+        $opt[$defcnt] = "--vertical-label \"$UNIT[$i]\" --title \"$hostname / $servicedesc\" $options $colors ";
         $def[$defcnt] = ""; 
         $def[$defcnt] .= "DEF:longrun=$RRDFILE[$i]:$DS[$i]:AVERAGE:reduce=LAST " ;
-        $def[$defcnt] .= "LINE:longrun#".$colors['number'].":\" \" ";
+        $def[$defcnt] .= "LINE2:longrun#".$colors['number'].":\" \" ";
         $def[$defcnt] .= "VDEF:vlongrun=longrun,LAST " ;
         $def[$defcnt] .= "GPRINT:vlongrun:\"$NAME[$i] %3.2lf\\n\" " ;
         $defcnt++;
         }
     if(preg_match('/^keycache_hitrate_now$/', $NAME[$i])) {
         $ds_name[$defcnt] = "MyISAM key cache hitrate";
-        $opt[$defcnt] = "--vertical-label \"$UNIT[$i]\" --title \"MyISAM key cache hitrate on $hostname\" --upper-limit 100 --lower-limit 0 ";
+        $opt[$defcnt] = "--vertical-label \"$UNIT[$i]\" --title \"MyISAM key cache hitrate on $hostname\" --upper-limit 100 --lower-limit 0 $options $colors ";
         $def[$defcnt] = "";
         foreach ($DS as $ii) {
           if(preg_match('/^keycache_hitrate$/', $NAME[$ii])) {
@@ -129,13 +131,13 @@ foreach ($DS as $i) {
             $def[$defcnt] .= "AREA:ag#$green: " ;
             $def[$defcnt] .= "AREA:ay#$yellow: " ;
             $def[$defcnt] .= "AREA:ar#$red: " ;
-            $def[$defcnt] .= "LINE1.5:hitrate#111111:\" \" ";
+            $def[$defcnt] .= "LINE2:hitrate#111111:\" \" ";
             $def[$defcnt] .= "VDEF:vhitrate=hitrate,LAST " ;
             $def[$defcnt] .= "GPRINT:vhitrate:\"Hitratio (since epoch) is %3.2lf percent \\n\" ";
           }
           if(preg_match('/^keycache_hitrate_now$/', $NAME[$ii])) {
             $def[$defcnt] .= "DEF:hitratenow=$RRDFILE[$ii]:$DS[$ii]:AVERAGE:reduce=LAST " ;
-            $def[$defcnt] .= "LINE1.5:hitratenow#$now:\" \" ";
+            $def[$defcnt] .= "LINE2:hitratenow#$now:\" \" ";
             $def[$defcnt] .= "VDEF:vhitratenow=hitratenow,LAST " ;
             $def[$defcnt] .= "GPRINT:vhitratenow:\"Hitratio (current) is %3.2lf percent \\n\" ";
           }
@@ -144,27 +146,27 @@ foreach ($DS as $i) {
     }
     if(preg_match('/^qcache_lowmem_prunes_rate$/', $NAME[$i])) {
         $ds_name[$defcnt] = "$NAME[$i]";
-        $opt[$defcnt] = "--vertical-label \"$UNIT[$i]\" --title \"$hostname / $servicedesc\" --upper-limit 100 --lower-limit 0";
+        $opt[$defcnt] = "--vertical-label \"$UNIT[$i]\" --title \"$hostname / $servicedesc\" --upper-limit 100 --lower-limit 0 $options $colors ";
         $def[$defcnt] = ""; 
         $def[$defcnt] .= "DEF:prunes=$RRDFILE[$i]:$DS[$i]:AVERAGE:reduce=LAST " ;
-        $def[$defcnt] .= "LINE:prunes#".$colors['rate'].":\" \" ";
+        $def[$defcnt] .= "LINE2:prunes#".$colors['rate'].":\" \" ";
         $def[$defcnt] .= "VDEF:vprunes=prunes,LAST " ;
         $def[$defcnt] .= "GPRINT:vprunes:\"$NAME[$i] %3.2lf\\n\" " ;
         $defcnt++;
         }
     if(preg_match('/^slow_queries_rate$/', $NAME[$i])) {
         $ds_name[$defcnt] = "$NAME[$i]";
-        $opt[$defcnt] = "--vertical-label \"$UNIT[$i]\" --title \"$hostname / $servicedesc\" --upper-limit 100 --lower-limit 0";
+        $opt[$defcnt] = "--vertical-label \"$UNIT[$i]\" --title \"$hostname / $servicedesc\" --upper-limit 100 --lower-limit 0 $options $colors ";
         $def[$defcnt] = ""; 
         $def[$defcnt] .= "DEF:prunes=$RRDFILE[$i]:$DS[$i]:AVERAGE:reduce=LAST " ;
-        $def[$defcnt] .= "LINE:prunes#".$colors['rate'].":\" \" ";
+        $def[$defcnt] .= "LINE2:prunes#".$colors['rate'].":\" \" ";
         $def[$defcnt] .= "VDEF:vprunes=prunes,LAST " ;
         $def[$defcnt] .= "GPRINT:vprunes:\"$NAME[$i] %3.2lf\\n\" " ;
         $defcnt++;
         }
     if(preg_match('/^tablecache_fillrate$/', $NAME[$i])) {
         $ds_name[$defcnt] = "Table cache hitrate";
-        $opt[$defcnt] = "--vertical-label \"$UNIT[$i]\" --title \"Table cache hitrate on $hostname\" --upper-limit 100 --lower-limit 0 ";
+        $opt[$defcnt] = "--vertical-label \"$UNIT[$i]\" --title \"Table cache hitrate on $hostname\" --upper-limit 100 --lower-limit 0 $options $colors ";
         $def[$defcnt] = "";
         foreach ($DS as $ii) {
           if(preg_match('/^tablecache_hitrate$/', $NAME[$ii])) {
@@ -175,13 +177,13 @@ foreach ($DS as $i) {
             $def[$defcnt] .= "AREA:ag#$green: " ;
             $def[$defcnt] .= "AREA:ay#$yellow: " ;
             $def[$defcnt] .= "AREA:ar#$red: " ;
-            $def[$defcnt] .= "LINE:hitrate#111111:\" \" ";
+            $def[$defcnt] .= "LINE2:hitrate#111111:\" \" ";
             $def[$defcnt] .= "VDEF:vhitrate=hitrate,LAST " ;
             $def[$defcnt] .= "GPRINT:vhitrate:\"Hitratio is %3.2lf percent \\n\" ";
           }
           if(preg_match('/^tablecache_fillrate$/', $NAME[$ii])) {
             $def[$defcnt] .= "DEF:hitratenow=$RRDFILE[$ii]:$DS[$ii]:AVERAGE:reduce=LAST " ;
-            $def[$defcnt] .= "LINE1.5:hitratenow#$now:\" \" ";
+            $def[$defcnt] .= "LINE2:hitratenow#$now:\" \" ";
             $def[$defcnt] .= "VDEF:vhitratenow=hitratenow,LAST " ;
             $def[$defcnt] .= "GPRINT:vhitratenow:\"%3.2lf%% of the cache is filled \\n\" ";
           }
@@ -190,7 +192,7 @@ foreach ($DS as $i) {
     }
     if(preg_match('/^pct_tmp_table_on_disk_now$/', $NAME[$i])) {
         $ds_name[$defcnt] = "Temporary tables created on disk ";
-        $opt[$defcnt] = "--vertical-label \"$UNIT[$i]\" --title \"Temporary tables created on disk on $hostname\" --upper-limit 10 --lower-limit 0 ";
+        $opt[$defcnt] = "--vertical-label \"$UNIT[$i]\" --title \"Temporary tables created on disk on $hostname\" --upper-limit 10 --lower-limit 0 $options $colors ";
         $def[$defcnt] = "";
         foreach ($DS as $ii) {
           if(preg_match('/^pct_tmp_table_on_disk$/', $NAME[$ii])) {
@@ -202,13 +204,13 @@ foreach ($DS as $i) {
             $def[$defcnt] .= "AREA:ag#$green: " ;
             $def[$defcnt] .= "AREA:ay#$yellow: " ;
             $def[$defcnt] .= "AREA:ar#$red: " ;
-            $def[$defcnt] .= "LINE:tmptbldsk#111111:\" \" ";
+            $def[$defcnt] .= "LINE2:tmptbldsk#111111:\" \" ";
             $def[$defcnt] .= "VDEF:vtmptbldsk=tmptbldsk,LAST " ;
             $def[$defcnt] .= "GPRINT:vtmptbldsk:\"%3.2lf percent of temp tables were created on disk (since epoch)\\n\" " ;
           }
           if(preg_match('/^pct_tmp_table_on_disk_now$/', $NAME[$ii])) {
             $def[$defcnt] .= "DEF:tmptbldsknow=$RRDFILE[$ii]:$DS[$ii]:AVERAGE:reduce=LAST " ;
-            $def[$defcnt] .= "LINE1.5:tmptbldsknow#$now:\" \" ";
+            $def[$defcnt] .= "LINE2:tmptbldsknow#$now:\" \" ";
             $def[$defcnt] .= "VDEF:vtmptbldsknow=tmptbldsknow,LAST " ;
             $def[$defcnt] .= "GPRINT:vtmptbldsknow:\"%3.2lf percent of temp tables were created on disk (recently)\\n\" " ;
           }   
@@ -217,70 +219,70 @@ foreach ($DS as $i) {
     }
     if(preg_match('/^threads_connected$/', $NAME[$i])) {
         $ds_name[$defcnt] = "$NAME[$i]";
-        $opt[$defcnt] = "--vertical-label \"$UNIT[$i]\" --title \"$hostname / $servicedesc\" ";
+        $opt[$defcnt] = "--vertical-label \"$UNIT[$i]\" --title \"$hostname / $servicedesc\" $options $colors ";
         $def[$defcnt] = "";
         $def[$defcnt] .= "DEF:threads=$RRDFILE[$i]:$DS[$i]:AVERAGE:reduce=LAST " ;
-        $def[$defcnt] .= "LINE:threads#".$colors['number'].":\" \" ";
+        $def[$defcnt] .= "LINE2:threads#".$colors['number'].":\" \" ";
         $def[$defcnt] .= "VDEF:vthreads=threads,LAST " ;
         $def[$defcnt] .= "GPRINT:vthreads:\"$NAME[$i] %3.2lf\\n\" " ;
         $defcnt++;
         }
     if(preg_match('/^threads_running$/', $NAME[$i])) {
         $ds_name[$defcnt] = "$NAME[$i]";
-        $opt[$defcnt] = "--vertical-label \"$UNIT[$i]\" --title \"$hostname / $servicedesc\" ";
+        $opt[$defcnt] = "--vertical-label \"$UNIT[$i]\" --title \"$hostname / $servicedesc\" $options $colors ";
         $def[$defcnt] = "";
         $def[$defcnt] .= "DEF:threads=$RRDFILE[$i]:$DS[$i]:AVERAGE:reduce=LAST " ;
-        $def[$defcnt] .= "LINE:threads#".$colors['number'].":\" \" ";
+        $def[$defcnt] .= "LINE2:threads#".$colors['number'].":\" \" ";
         $def[$defcnt] .= "VDEF:vthreads=threads,LAST " ;
         $def[$defcnt] .= "GPRINT:vthreads:\"$NAME[$i] %3.2lf\\n\" " ;
         $defcnt++;
         }
     if(preg_match('/^threads_cached$/', $NAME[$i])) {
         $ds_name[$defcnt] = "$NAME[$i]";
-        $opt[$defcnt] = "--vertical-label \"$UNIT[$i]\" --title \"$hostname / $servicedesc\" ";
+        $opt[$defcnt] = "--vertical-label \"$UNIT[$i]\" --title \"$hostname / $servicedesc\" $options $colors ";
         $def[$defcnt] = "";
         $def[$defcnt] .= "DEF:threads=$RRDFILE[$i]:$DS[$i]:AVERAGE:reduce=LAST " ;
-        $def[$defcnt] .= "LINE:threads#".$colors['number'].":\" \" ";
+        $def[$defcnt] .= "LINE2:threads#".$colors['number'].":\" \" ";
         $def[$defcnt] .= "VDEF:vthreads=threads,LAST " ;
         $def[$defcnt] .= "GPRINT:vthreads:\"$NAME[$i] %3.2lf\\n\" " ;
         $defcnt++;
         }
     if(preg_match('/^threads_created_per_sec$/', $NAME[$i])) {
         $ds_name[$defcnt] = "$NAME[$i]";
-        $opt[$defcnt] = "--vertical-label \"$UNIT[$i]\" --title \"$hostname / $servicedesc\" ";
+        $opt[$defcnt] = "--vertical-label \"$UNIT[$i]\" --title \"$hostname / $servicedesc\" $options $colors ";
         $def[$defcnt] = ""; 
         $def[$defcnt] .= "DEF:sps=$RRDFILE[$i]:$DS[$i]:AVERAGE:reduce=LAST " ;
-        $def[$defcnt] .= "LINE:sps#".$colors['response'].":\" \" ";
+        $def[$defcnt] .= "LINE2:sps#".$colors['response'].":\" \" ";
         $def[$defcnt] .= "VDEF:vsps=sps,LAST " ;
         $def[$defcnt] .= "GPRINT:vsps:\"$NAME[$i] %3.2lf\\n\" " ;
         $defcnt++;
         }
     if(preg_match('/^connects_aborted_per_sec$/', $NAME[$i])) {
         $ds_name[$defcnt] = "$NAME[$i]";
-        $opt[$defcnt] = "--vertical-label \"$UNIT[$i]\" --title \"$hostname / $servicedesc\" ";
+        $opt[$defcnt] = "--vertical-label \"$UNIT[$i]\" --title \"$hostname / $servicedesc\" $options $colors ";
         $def[$defcnt] = ""; 
         $def[$defcnt] .= "DEF:sps=$RRDFILE[$i]:$DS[$i]:AVERAGE:reduce=LAST " ;
-        $def[$defcnt] .= "LINE:sps#".$colors['response'].":\" \" ";
+        $def[$defcnt] .= "LINE2:sps#".$colors['response'].":\" \" ";
         $def[$defcnt] .= "VDEF:vsps=sps,LAST " ;
         $def[$defcnt] .= "GPRINT:vsps:\"$NAME[$i] %3.2lf\\n\" " ;
         $defcnt++;
         }
     if(preg_match('/^clients_aborted_per_sec$/', $NAME[$i])) {
         $ds_name[$defcnt] = "$NAME[$i]";
-        $opt[$defcnt] = "--vertical-label \"$UNIT[$i]\" --title \"$hostname / $servicedesc\" ";
+        $opt[$defcnt] = "--vertical-label \"$UNIT[$i]\" --title \"$hostname / $servicedesc\" $options $colors ";
         $def[$defcnt] = ""; 
         $def[$defcnt] .= "DEF:sps=$RRDFILE[$i]:$DS[$i]:AVERAGE:reduce=LAST " ;
-        $def[$defcnt] .= "LINE:sps#".$colors['response'].":\" \" ";
+        $def[$defcnt] .= "LINE2:sps#".$colors['response'].":\" \" ";
         $def[$defcnt] .= "VDEF:vsps=sps,LAST " ;
         $def[$defcnt] .= "GPRINT:vsps:\"$NAME[$i] %3.2lf\\n\" " ;
         $defcnt++;
         }
     if(preg_match('/^Slots$/', $NAME[$i])) {
         $ds_name[$defcnt] = "Slots";
-        $opt[$defcnt] = "--vertical-label \"$UNIT[$i]\" --title \"Slots and OpenSlots\" ";
+        $opt[$defcnt] = "--vertical-label \"$UNIT[$i]\" --title \"Slots and OpenSlots\" $options $colors ";
         $def[$defcnt] = "";
         $def[$defcnt] .= "DEF:slots=$rrdfile:$DS[$i]:AVERAGE:reduce=LAST " ;
-        $def[$defcnt] .= "LINE1:slots#".$colors['slots'].":\" \" ";
+        $def[$defcnt] .= "LINE2:slots#".$colors['slots'].":\" \" ";
         $def[$defcnt] .= "VDEF:vslots=slots,LAST " ;
         $def[$defcnt] .= "GPRINT:vslots:\"$NAME[$i] %.0lf\" " ;
         foreach ($DS as $j) {
@@ -295,16 +297,16 @@ foreach ($DS as $i) {
     }
     if(preg_match('/^index_usage$/', $NAME[$i])) {
         $ds_name[$defcnt] = "$NAME[$i]";
-        $opt[$defcnt] = "--vertical-label \"$UNIT[$i]\" --title \"$hostname / $servicedesc\" --upper-limit 100 --lower-limit 0";
+        $opt[$defcnt] = "--vertical-label \"$UNIT[$i]\" --title \"$hostname / $servicedesc\" --upper-limit 100 --lower-limit 0 $options $colors ";
         $def[$defcnt] = "";
         $def[$defcnt] .= "DEF:indexusage=$RRDFILE[$i]:$DS[$i]:AVERAGE:reduce=LAST " ;
-        $def[$defcnt] .= "LINE:indexusage#".$colors['rate'].":\" \" ";
+        $def[$defcnt] .= "LINE2:indexusage#".$colors['rate'].":\" \" ";
         $def[$defcnt] .= "VDEF:vindexusage=indexusage,LAST " ;
         $def[$defcnt] .= "GPRINT:vindexusage:\"$NAME[$i] %3.2lf\\n\" " ;
         foreach ($DS as $j) {
           if(preg_match('/^index_usage_now$/', $NAME[$j])) {
             $def[$defcnt] .= "DEF:indexusagenow=$rrdfile:$DS[$j]:AVERAGE:reduce=LAST " ;
-            $def[$defcnt] .= "LINE:indexusagenow#".$colors['ratenow'].":\" \" ";
+            $def[$defcnt] .= "LINE2:indexusagenow#".$colors['ratenow'].":\" \" ";
             $def[$defcnt] .= "VDEF:vindexusagenow=indexusagenow,LAST " ;
             $def[$defcnt] .= "GPRINT:vindexusagenow:\"$NAME[$j] %.0lf\\n\" " ;
           }
@@ -313,16 +315,16 @@ foreach ($DS as $i) {
     }
     if(preg_match('/^qcache_hitrate$/', $NAME[$i])) {
         $ds_name[$defcnt] = "$NAME[$i]";
-        $opt[$defcnt] = "--vertical-label \"$UNIT[$i]\" --title \"$hostname / $servicedesc\" --upper-limit 100 --lower-limit 0";
+        $opt[$defcnt] = "--vertical-label \"$UNIT[$i]\" --title \"$hostname / $servicedesc\" --upper-limit 100 --lower-limit 0 $options $colors ";
         $def[$defcnt] = "";
         $def[$defcnt] .= "DEF:hitrate=$RRDFILE[$i]:$DS[$i]:AVERAGE:reduce=LAST " ;
-        $def[$defcnt] .= "LINE:hitrate#".$colors['rate'].":\" \" ";
+        $def[$defcnt] .= "LINE2:hitrate#".$colors['rate'].":\" \" ";
         $def[$defcnt] .= "VDEF:vhitrate=hitrate,LAST " ;
         $def[$defcnt] .= "GPRINT:vhitrate:\"$NAME[$i] %3.2lf\\n\" " ;
         foreach ($DS as $j) {
           if(preg_match('/^qcache_hitrate_now$/', $NAME[$j])) {
             $def[$defcnt] .= "DEF:hitratenow=$rrdfile:$DS[$j]:AVERAGE:reduce=LAST " ;
-            $def[$defcnt] .= "LINE:hitratenow#".$colors['ratenow'].":\" \" ";
+            $def[$defcnt] .= "LINE2:hitratenow#".$colors['ratenow'].":\" \" ";
             $def[$defcnt] .= "VDEF:vhitratenow=hitratenow,LAST " ;
             $def[$defcnt] .= "GPRINT:vhitratenow:\"$NAME[$j] %.0lf\\n\" " ;
           }
@@ -331,10 +333,10 @@ foreach ($DS as $i) {
         foreach ($DS as $k) {
           if(preg_match('/^selects_per_sec$/', $NAME[$k])) {
             $ds_name[$defcnt] = "$NAME[$k]";
-            $opt[$defcnt] = "--vertical-label \"$UNIT[$k]\" --title \"$hostname / $servicedesc\" ";
+            $opt[$defcnt] = "--vertical-label \"$UNIT[$k]\" --title \"$hostname / $servicedesc\" $options $colors ";
             $def[$defcnt] = ""; 
             $def[$defcnt] .= "DEF:sps=$RRDFILE[$k]:$DS[$k]:AVERAGE:reduce=LAST " ;
-            $def[$defcnt] .= "LINE1:sps#".$colors['number'].":\" \" ";
+            $def[$defcnt] .= "LINE2:sps#".$colors['number'].":\" \" ";
             $def[$defcnt] .= "VDEF:vsps=sps,LAST " ;
             $def[$defcnt] .= "GPRINT:vsps:\"$NAME[$k] %3.2lf\\n\" ";
           }   
@@ -343,16 +345,16 @@ foreach ($DS as $i) {
     }
     if(preg_match('/^tablelock_contention$/', $NAME[$i])) {
         $ds_name[$defcnt] = "$NAME[$i]";
-        $opt[$defcnt] = "--vertical-label \"$UNIT[$i]\" --title \"$hostname / $servicedesc\" --upper-limit 10 --lower-limit 0";
+        $opt[$defcnt] = "--vertical-label \"$UNIT[$i]\" --title \"$hostname / $servicedesc\" --upper-limit 10 --lower-limit 0 $options $colors ";
         $def[$defcnt] = "";
         $def[$defcnt] .= "DEF:tbllckcont=$RRDFILE[$i]:$DS[$i]:AVERAGE:reduce=LAST " ;
-        $def[$defcnt] .= "LINE:tbllckcont#".$colors['rate'].":\" \" ";
+        $def[$defcnt] .= "LINE2:tbllckcont#".$colors['rate'].":\" \" ";
         $def[$defcnt] .= "VDEF:vtbllckcont=tbllckcont,LAST " ;
         $def[$defcnt] .= "GPRINT:vtbllckcont:\"$NAME[$i] %3.2lf\\n\" " ;
         foreach ($DS as $j) {
           if(preg_match('/^tablelock_contention_now$/', $NAME[$j])) {
             $def[$defcnt] .= "DEF:tbllckcontnow=$rrdfile:$DS[$j]:AVERAGE:reduce=LAST " ;
-            $def[$defcnt] .= "LINE:tbllckcontnow#".$colors['ratenow'].":\" \" ";
+            $def[$defcnt] .= "LINE2:tbllckcontnow#".$colors['ratenow'].":\" \" ";
             $def[$defcnt] .= "VDEF:vtbllckcontnow=tbllckcontnow,LAST " ;
             $def[$defcnt] .= "GPRINT:vtbllckcontnow:\"$NAME[$j] %.0lf\\n\" " ;
           }
@@ -361,16 +363,16 @@ foreach ($DS as $i) {
     }
     if(preg_match('/^thread_cache_hitrate$/', $NAME[$i])) {
         $ds_name[$defcnt] = "$NAME[$i]";
-        $opt[$defcnt] = "--vertical-label \"$UNIT[$i]\" --title \"$hostname / $servicedesc\" --upper-limit 100 --lower-limit 0";
+        $opt[$defcnt] = "--vertical-label \"$UNIT[$i]\" --title \"$hostname / $servicedesc\" --upper-limit 100 --lower-limit 0 $options $colors ";
         $def[$defcnt] = "";
         $def[$defcnt] .= "DEF:hitrate=$RRDFILE[$i]:$DS[$i]:AVERAGE:reduce=LAST " ;
-        $def[$defcnt] .= "LINE:hitrate#".$colors['rate'].":\" \" ";
+        $def[$defcnt] .= "LINE2:hitrate#".$colors['rate'].":\" \" ";
         $def[$defcnt] .= "VDEF:vhitrate=hitrate,LAST " ;
         $def[$defcnt] .= "GPRINT:vhitrate:\"$NAME[$i] %3.2lf\\n\" " ;
         foreach ($DS as $j) {
           if(preg_match('/^thread_cache_hitrate_now$/', $NAME[$j])) {
             $def[$defcnt] .= "DEF:hitratenow=$rrdfile:$DS[$j]:AVERAGE:reduce=LAST " ;
-            $def[$defcnt] .= "LINE:hitratenow#".$colors['ratenow'].":\" \" ";
+            $def[$defcnt] .= "LINE2:hitratenow#".$colors['ratenow'].":\" \" ";
             $def[$defcnt] .= "VDEF:vhitratenow=hitratenow,LAST " ;
             $def[$defcnt] .= "GPRINT:vhitratenow:\"$NAME[$j] %.0lf\\n\" " ;
           }
@@ -379,10 +381,10 @@ foreach ($DS as $i) {
         foreach ($DS as $k) {
           if(preg_match('/^connections_per_sec$/', $NAME[$k])) {
             $ds_name[$defcnt] = "$NAME[$k]";
-            $opt[$defcnt] = "--vertical-label \"$UNIT[$k]\" --title \"$hostname / $servicedesc\" ";
+            $opt[$defcnt] = "--vertical-label \"$UNIT[$k]\" --title \"$hostname / $servicedesc\" $options $colors ";
             $def[$defcnt] = ""; 
             $def[$defcnt] .= "DEF:sps=$RRDFILE[$k]:$DS[$k]:AVERAGE:reduce=LAST " ;
-            $def[$defcnt] .= "LINE1:sps#".$colors['number'].":\" \" ";
+            $def[$defcnt] .= "LINE2:sps#".$colors['number'].":\" \" ";
             $def[$defcnt] .= "VDEF:vsps=sps,LAST " ;
             $def[$defcnt] .= "GPRINT:vsps:\"$NAME[$k] %3.2lf\\n\" ";
           }   
@@ -391,20 +393,20 @@ foreach ($DS as $i) {
     }
     if(preg_match('/^pct_open_files$/', $NAME[$i])) {
         $ds_name[$defcnt] = "$NAME[$i]";
-        $opt[$defcnt] = "--vertical-label \"$UNIT[$i]\" --title \"$hostname / $servicedesc\" --upper-limit 100 --lower-limit 0";
+        $opt[$defcnt] = "--vertical-label \"$UNIT[$i]\" --title \"$hostname / $servicedesc\" --upper-limit 100 --lower-limit 0 $options $colors ";
         $def[$defcnt] = "";
         $def[$defcnt] .= "DEF:threadsrate=$RRDFILE[$i]:$DS[$i]:AVERAGE:reduce=LAST " ;
-        $def[$defcnt] .= "LINE:threadsrate#".$colors['rate'].":\" \" ";
+        $def[$defcnt] .= "LINE2:threadsrate#".$colors['rate'].":\" \" ";
         $def[$defcnt] .= "VDEF:vthreadsrate=threadsrate,LAST " ;
         $def[$defcnt] .= "GPRINT:vthreadsrate:\"$NAME[$i] %3.2lf\\n\" " ;
         $defcnt++;
         foreach ($DS as $j) {
           if(preg_match('/^open_files$/', $NAME[$j])) {
             $ds_name[$defcnt] = "$NAME[$j]";
-            $opt[$defcnt] = "--vertical-label \"$UNIT[$j]\" --title \"$hostname / $servicedesc\" ";
+            $opt[$defcnt] = "--vertical-label \"$UNIT[$j]\" --title \"$hostname / $servicedesc\" $options $colors ";
             $def[$defcnt] = "";
             $def[$defcnt] .= "DEF:openfiles=$rrdfile:$DS[$j]:AVERAGE:reduce=LAST " ;
-            $def[$defcnt] .= "LINE:openfiles#".$colors['number'].":\" \" ";
+            $def[$defcnt] .= "LINE2:openfiles#".$colors['number'].":\" \" ";
             $def[$defcnt] .= "VDEF:vopenfiles=openfiles,LAST " ;
             $def[$defcnt] .= "GPRINT:vopenfiles:\"$NAME[$j] %.0lf\\n\" " ;
           }
