@@ -16,6 +16,8 @@ if (count($DS) >=2) {
     //$def[1] .= rrd::area("var1_d", "#A2A2A2FF");
     $def[1] .= rrd::line2("var1_d", $main_color, "Uptime");
     $def[1] .= rrd::gprint("var1_d", "LAST", "%7.0lf days");
+} else {
+    $def[1] .= "COMMENT:\"ERROR\" " ;
 }
 
 ?>
