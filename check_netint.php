@@ -6,7 +6,7 @@
 
 include("style.php");
 
-for ($i=1; $i<=count($DS); $i+=2) {
+for ($i=1; $i<count($DS); $i+=2) {
     $j = ($i+1)/2;
     $ds_name[$j] = explode("_", $NAME[$i])[0];
     $unit = explode("_", $NAME[$i])[2];
