@@ -11,6 +11,8 @@
 # Some additional data are memory and swap operations (not in for later 2.6 kernel),
 # interrupts and context switches, processes forking and blocked processes stats
 
+include("style.php");
+
 $CORE = array();
 foreach ($this->DS as $KEY=>$VAL) {
 	$cpunum=-1;
@@ -61,13 +63,13 @@ for ($i=0; $i<count($CORE); $i++) {
 	$pre = '';
 	$unm = '';
         if ($i==0) {
-                $opt[$gkey] = '--vertical-label Percent --title "Total for all CPUs on ' . $this->MACRO['DISP_HOSTNAME']. '"  --upper=101 --lower=0';
+                $opt[$gkey] = '--vertical-label Percent --title "Total for all CPUs on ' . $this->MACRO['DISP_HOSTNAME']. '"  --upper=101 --lower=0'." $options $colors ";
 		$ds_name[$gkey] = "Total for All CPUs"; 
 		$pre = 'percent_';
 		$unm = '%2.1lf%% ';
         }
         else {  
-                $opt[$gkey] = '--vertical-label "jiffs/sec" --title "CPU Core '. ($i-1) . ' on '. $this->MACRO['DISP_HOSTNAME'].'" --lower=0';
+                $opt[$gkey] = '--vertical-label "jiffs/sec" --title "CPU Core '. ($i-1) . ' on '. $this->MACRO['DISP_HOSTNAME'].'" --lower=0'." $options $colors ";
 		$ds_name[$gkey] = 'CPU Core '.($i-1);
 		$unm = '%6.2lf ';
         }
@@ -121,7 +123,7 @@ for ($i=0; $i<count($CORE); $i++) {
 
 if (isset($swap_paged_in) && isset($swap_paged_out) && isset($data_paged_in) && isset($data_paged_out)) {
 	$gkey++;
-	$opt[$gkey] = '--vertical-label # --title "Memory and Swap Operations on ' . $this->MACRO['DISP_HOSTNAME']. '"';
+	$opt[$gkey] = '--vertical-label # --title "Memory and Swap Operations on ' . $this->MACRO['DISP_HOSTNAME']. '"'." $options $colors ";
 	$ds_name[$gkey] = "Memory and Swap Operations";
 	$def[$gkey] = rrd::def("data_paged_in", $RRDFILE[$data_paged_in], $DS[$data_paged_in], "AVERAGE");
 	$def[$gkey] .= rrd::def("data_paged_out", $RRDFILE[$data_paged_out], $DS[$data_paged_out], "AVERAGE");
@@ -141,28 +143,28 @@ if (isset($swap_paged_in) && isset($swap_paged_out) && isset($data_paged_in) && 
 
 if (isset($num_intr) && isset($ctxt)) {
 	$gkey++;
-        $opt[$gkey] = '--vertical-label "events per sec" --title "Interrupts and Context Switches on ' . $this->MACRO['DISP_HOSTNAME']. '"';
+        $opt[$gkey] = '--vertical-label "events per sec" --title "Interrupts and Context Switches on ' . $this->MACRO['DISP_HOSTNAME']. '"'." $options $colors ";
         $ds_name[$gkey] = "Interrupts and Context Switches";
         $def[$gkey] = rrd::def("ctxt", $RRDFILE[$ctxt], $DS[$ctxt], "AVERAGE");
         $def[$gkey] .= rrd::def("num_intr", $RRDFILE[$num_intr], $DS[$num_intr], "AVERAGE");
-	$def[$gkey] .= "AREA:ctxt#00CF00:\"Context Switches (per second)\: \t\g\" ";
+	$def[$gkey] .= "LINE2:ctxt$secondary_color:\"Context Switches (per second)\: \t\g\" ";
 	$def[$gkey] .= rrd::gprint("ctxt", array("LAST", "AVERAGE", "MAX"), '%6.2lf ');
-	$def[$gkey] .= "LINE1:num_intr#FF0000:\"Interrupts (per second)      \: \t\g\" ";
+	$def[$gkey] .= "LINE2:num_intr$main_color:\"Interrupts (per second)      \: \t\g\" ";
 	$def[$gkey] .= rrd::gprint("num_intr", array("LAST", "AVERAGE", "MAX"), '%6.2lf ');
 }
 
 if (isset($processes) && isset($procs_running) && isset($procs_blocked)) {
         $gkey++;
-        $opt[$gkey] = '--vertical-label "processes" --title "Process Scheduling on ' . $this->MACRO['DISP_HOSTNAME']. '"';
+        $opt[$gkey] = '--vertical-label "processes" --title "Process Scheduling on ' . $this->MACRO['DISP_HOSTNAME']. '"'." $options $colors ";
         $ds_name[$gkey] = "Process Scheduling";
         $def[$gkey] = rrd::def("processes", $RRDFILE[$processes], $DS[$processes], "AVERAGE");
         $def[$gkey] .= rrd::def("procs_running", $RRDFILE[$procs_running], $DS[$procs_running], "AVERAGE");
 	$def[$gkey] .= rrd::def("procs_blocked", $RRDFILE[$procs_blocked], $DS[$procs_blocked], "AVERAGE");
-        $def[$gkey] .= "AREA:processes#00CF00:\"Processes Forked Per Second\: \t\g\" ";
+        $def[$gkey] .= "LINE2:processes$secondary_color:\"Processes Forked Per Second\: \t\g\" ";
         $def[$gkey] .= rrd::gprint("processes", array("LAST", "AVERAGE", "MAX"), '%6.2lf ');
-	$def[$gkey] .= "LINE1:procs_running#0000FF:\"Processes In Running State \: \t\g\" ";  
+	$def[$gkey] .= "LINE2:procs_running$main_color:\"Processes In Running State \: \t\g\" ";  
         $def[$gkey] .= rrd::gprint("procs_running", array("LAST", "AVERAGE", "MAX"), '%6.2lf ');
-        $def[$gkey] .= "LINE1:procs_blocked#FF0000:\"Processes Currently Blocked\: \t\g\" ";
+        $def[$gkey] .= "LINE2:procs_blocked$black:\"Processes Currently Blocked\: \t\g\" ";
         $def[$gkey] .= rrd::gprint("procs_blocked", array("LAST", "AVERAGE", "MAX"), '%6.2lf ');
 }
 
