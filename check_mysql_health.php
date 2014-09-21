@@ -295,6 +295,7 @@ foreach ($DS as $i) {
         $opt[$defcnt] = "--vertical-label \"$UNIT[$i]\" --title \"$hostname / $servicedesc\" --upper-limit 100 --lower-limit 0 $options $colors ";
         $def[$defcnt] = "";
         $def[$defcnt] .= "DEF:indexusage=$RRDFILE[$i]:$DS[$i]:AVERAGE:reduce=LAST " ;
+        $def[$defcnt] .= "AREA:indexusage".$gray.": ";
         $def[$defcnt] .= "LINE2:indexusage".$main_color.":\" \" ";
         $def[$defcnt] .= "VDEF:vindexusage=indexusage,LAST " ;
         $def[$defcnt] .= "GPRINT:vindexusage:\"$NAME[$i] %3.2lf\\n\" " ;
@@ -391,6 +392,7 @@ foreach ($DS as $i) {
         $opt[$defcnt] = "--vertical-label \"$UNIT[$i]\" --title \"$hostname / $servicedesc\" --upper-limit 100 --lower-limit 0 $options $colors ";
         $def[$defcnt] = "";
         $def[$defcnt] .= "DEF:threadsrate=$RRDFILE[$i]:$DS[$i]:AVERAGE:reduce=LAST " ;
+        $def[$defcnt] .= "AREA:threadsrate".$gray.": ";
         $def[$defcnt] .= "LINE2:threadsrate".$main_color.":\" \" ";
         $def[$defcnt] .= "VDEF:vthreadsrate=threadsrate,LAST " ;
         $def[$defcnt] .= "GPRINT:vthreadsrate:\"$NAME[$i] %3.2lf\\n\" " ;
