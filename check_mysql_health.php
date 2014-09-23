@@ -151,7 +151,7 @@ foreach ($DS as $i) {
         }
     if(preg_match('/^slow_queries_rate$/', $NAME[$i])) {
         $ds_name[$defcnt] = "$NAME[$i]";
-        $opt[$defcnt] = "--vertical-label \"$UNIT[$i]\" --title \"$hostname / $servicedesc\" --upper-limit 100 --lower-limit 0 $options $colors ";
+        $opt[$defcnt] = "--vertical-label \"$UNIT[$i]\" --title \"$hostname / $servicedesc\" --lower-limit 0 $options $colors ";
         $def[$defcnt] = ""; 
         $def[$defcnt] .= "DEF:prunes=$RRDFILE[$i]:$DS[$i]:AVERAGE:reduce=LAST " ;
         $def[$defcnt] .= "LINE2:prunes".$main_color.":\" \" ";
