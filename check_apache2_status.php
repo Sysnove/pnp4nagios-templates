@@ -12,7 +12,7 @@ $opt[1] = "--vertical-label \"Days\" --title \"$hostname / Apache2 Uptime\" $opt
 $ds_name[1] = "Apache2 Uptime";
 
 $def[1] = rrd::def("var1", $RRDFILE[1], $DS[1]);
-$def[1] .= rrd::cdef("var1_d", "var1,1440,/");
+$def[1] .= rrd::cdef("var1_d", "var1,86400,/");
 $def[1] .= rrd::line2("var1_d", $main_color, "Uptime");
 $def[1] .= rrd::gprint("var1_d", array("LAST", "AVERAGE", "MAX"), "%7.0lf days");
 
